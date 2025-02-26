@@ -24,6 +24,8 @@ group by dt, c.job_industry_category
 order by dt, sum_lst_price desc;
 ```
 
+![img_1](img/img_2.png)
+
 ### Вывести количество онлайн-заказов для всех брендов в рамках подтвержденных заказов клиентов из сферы IT
 
 ```sql
