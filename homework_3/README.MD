@@ -95,6 +95,8 @@ group by c.customer_id
 order by cnt desc, sum_lp desc;
 ```
 
+![img_6](img/img_6.png)
+
 #### Вариант 3 (оконные функции)
 
 ```sql
