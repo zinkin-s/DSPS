@@ -54,27 +54,33 @@ from transaction_20250217 t
 
 ### Найти по всем клиентам сумму всех транзакций (list_price), максимум, минимум и количество транзакций, отсортировав результат по убыванию суммы транзакций и количества клиентов.
 
+#### Вариант 1 (group by)
+
 ```sql
 with transact_agg as (
-	select t.customer_id,
-           sum(list_price) sum_lp,
+	select t.customer_id , 
+           sum(list_price) sum_lp, 
            max(list_price) max_lp, 
            min(list_price) min_lp, 
            COUNT(*) cnt
 	from transaction_20250217 t 
 	group by customer_id
-	order by sum_lp desc
 )
 select c.customer_id , 
        c.first_name, 
-       c.last_name, t.sum_lp, 
+       c.last_name, 
+       t.sum_lp, 
        t.max_lp, 
        t.min_lp, 
        t.cnt
 from customer_20250217 c 
 join transact_agg t on t.customer_id = c.customer_id
-order by cnt desc;
+order by cnt desc, sum_lp desc;
 ```
+
+![img_5](img/img_5.png)
+
+#### Вариант 2 (group by)
 
 ```sql
 select c.customer_id , 
@@ -88,6 +94,8 @@ join transaction_20250217 t on t.customer_id = c.customer_id
 group by c.customer_id 
 order by cnt desc, sum_lp desc;
 ```
+
+#### Вариант 3 (оконные функции)
 
 ```sql
 select distinct t.customer_id,c.first_name, c.last_name,
