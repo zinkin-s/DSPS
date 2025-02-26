@@ -6,7 +6,8 @@
 ### Вывести распределение (количество) клиентов по сферам деятельности, отсортировав результат по убыванию количества
 
 ```sql
-select job_industry_category, count(job_industry_category) cnt
+select job_industry_category
+       ,count(job_industry_category) cnt
 from customer_20250217
 group by job_industry_category
 order by cnt desc;
@@ -16,7 +17,9 @@ order by cnt desc;
 ### Найти сумму транзакций за каждый месяц по сферам деятельности, отсортировав по месяцам и по сфере деятельности
 
 ```sql
-select c.job_industry_category, sum(t.list_price) sum_lst_price, date_trunc('month', to_date(t.transaction_date, 'DD.MM.YYYY')) dt
+select c.job_industry_category
+       ,sum(t.list_price) sum_lst_price
+       ,date_trunc('month', to_date(t.transaction_date, 'DD.MM.YYYY')) dt
 from customer_20250217 c 
 join transaction_20250217 t on t.customer_id = c.customer_id
 where coalesce(c.job_industry_category, '')  <> ''
@@ -29,7 +32,8 @@ order by dt, sum_lst_price desc;
 ### Вывести количество онлайн-заказов для всех брендов в рамках подтвержденных заказов клиентов из сферы IT
 
 ```sql
-select t.brand, count(t.brand)
+select t.brand
+       ,count(t.brand)
 from transaction_20250217 t
 join customer_20250217 c on c.customer_id = t.customer_id
 where t.online_order = 'True' and c.job_industry_category = 'IT' and coalesce(t.brand, '') <> ''
@@ -41,7 +45,8 @@ group by t.brand;
 ### Вывести только самые первые транзакции клиентов. Решить с помощью оконных функций.
 
 ```sql
-select distinct customer_id, *, first_value(to_date(transaction_date, 'DD.MM.YYYY')) over (partition by customer_id)
+select distinct customer_id, *, 
+       first_value(to_date(transaction_date, 'DD.MM.YYYY')) over (partition by customer_id)
 from transaction_20250217 t 
 ```
 
@@ -51,19 +56,33 @@ from transaction_20250217 t
 
 ```sql
 with transact_agg as (
-	select t.customer_id , sum(list_price) sum_lp, max(list_price) max_lp, min(list_price) min_lp, COUNT(*) cnt
+	select t.customer_id,
+           sum(list_price) sum_lp,
+           max(list_price) max_lp, 
+           min(list_price) min_lp, 
+           COUNT(*) cnt
 	from transaction_20250217 t 
 	group by customer_id
 	order by sum_lp desc
 )
-select c.customer_id , c.first_name, c.last_name, t.sum_lp, t.max_lp, t.min_lp, t.cnt
+select c.customer_id , 
+       c.first_name, 
+       c.last_name, t.sum_lp, 
+       t.max_lp, 
+       t.min_lp, 
+       t.cnt
 from customer_20250217 c 
 join transact_agg t on t.customer_id = c.customer_id
 order by cnt desc;
 ```
 
 ```sql
-select c.customer_id , c.first_name, c.last_name, sum(t.list_price) sum_lp, max(t.list_price) max_lp, min(t.list_price) min_lp, count(t.*)cnt
+select c.customer_id , 
+       c.first_name, c.last_name, 
+       sum(t.list_price) sum_lp, 
+       max(t.list_price) max_lp, 
+       min(t.list_price) min_lp, 
+       count(t.*)cnt
 from customer_20250217 c 
 join transaction_20250217 t on t.customer_id = c.customer_id
 group by c.customer_id 
