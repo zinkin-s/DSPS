@@ -41,9 +41,11 @@ group by t.brand;
 ### Вывести только самые первые транзакции клиентов. Решить с помощью оконных функций.
 
 ```sql
-select *, first_value(to_date(transaction_date, 'DD.MM.YYYY')) over (partition by customer_id)
+select distinct customer_id, *, first_value(to_date(transaction_date, 'DD.MM.YYYY')) over (partition by customer_id)
 from transaction_20250217 t 
 ```
+
+![img_4](img/img_4.png)
 
 ### Найти по всем клиентам сумму всех транзакций (list_price), максимум, минимум и количество транзакций, отсортировав результат по убыванию суммы транзакций и количества клиентов.
 
