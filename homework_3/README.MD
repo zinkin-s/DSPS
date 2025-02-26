@@ -129,6 +129,8 @@ where ts.sum_lp  = (
 ) and ts.sum_lp is not null
 ```
 
+![img_9](img/img_9.png)
+
 ```sql
 with transact_sum as (
 	select t.customer_id, sum(t.list_price) sum_lp
@@ -143,6 +145,8 @@ where ts.sum_lp  = (
 	from transact_sum 
 ) and ts.sum_lp is not null
 ```
+
+![img_10](img/img_10.png)
 
 ### Вывести имена, фамилии и профессии клиентов, между транзакциями которых был максимальный интервал (интервал вычисляется в днях) 
 
