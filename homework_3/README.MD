@@ -24,7 +24,7 @@ group by dt, c.job_industry_category
 order by dt, sum_lst_price desc;
 ```
 
-![img_1](img/img_2.png)
+![img_2](img/img_2.png)
 
 ### Вывести количество онлайн-заказов для всех брендов в рамках подтвержденных заказов клиентов из сферы IT
 
@@ -35,6 +35,8 @@ join customer_20250217 c on c.customer_id = t.customer_id
 where t.online_order = 'True' and c.job_industry_category = 'IT' and coalesce(t.brand, '') <> ''
 group by t.brand;
 ```
+
+![img_3](img/img_3.png)
 
 ### Вывести только самые первые транзакции клиентов. Решить с помощью оконных функций.
 
